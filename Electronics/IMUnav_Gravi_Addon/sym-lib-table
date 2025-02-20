@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "hw-045")(type "Legacy")(uri "${KIPRJMOD}/MT3608-module-kicad-main/hw-045.lib")(options "")(descr ""))
+)
