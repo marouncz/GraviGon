@@ -1,0 +1,5 @@
+../Core/Src/mpu.c:28:6:mpuInit	48	static
+../Core/Src/mpu.c:67:14:mpuRead	16	static
+../Core/Src/mpu.c:92:6:mpuTriggerDMA	16	static
+../Core/Src/mpu.c:100:9:mpuReady	0	static
+../Core/Src/mpu.c:107:6:mpuReleaseSemaphore	0	static

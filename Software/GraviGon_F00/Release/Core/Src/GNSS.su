@@ -1,0 +1,14 @@
+../Core/Src/GNSS.c:53:6:GNSS_Init	8	static
+../Core/Src/GNSS.c:103:6:GNSS_GetUniqID	16	static
+../Core/Src/GNSS.c:115:6:GNSS_GetNavigatorData	16	static
+../Core/Src/GNSS.c:127:6:GNSS_GetPOSLLHData	16	static
+../Core/Src/GNSS.c:139:6:GNSS_GetPVTData	16	static
+../Core/Src/GNSS.c:153:6:GNSS_ParseUniqID	0	static
+../Core/Src/GNSS.c:163:6:GNSS_SetMode	0	static
+../Core/Src/GNSS.c:191:6:GNSS_ParsePVTData	24	static
+../Core/Src/GNSS.c:254:6:GNSS_ParseNavigatorData	0	static
+../Core/Src/GNSS.c:270:6:GNSS_ParsePOSLLHData	0	static
+../Core/Src/GNSS.c:77:6:GNSS_ParseBuffer	16	static
+../Core/Src/GNSS.c:308:6:GNSS_LoadConfig	8	static
+../Core/Src/GNSS.c:330:9:GNSS_Checksum	0	static
+../Core/Src/GNSS.c:336:6:HAL_UART_RxCpltCallback	0	static

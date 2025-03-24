@@ -1,0 +1,6 @@
+../Core/Src/adis.c:30:6:adisReset	8	static
+../Core/Src/adis.c:40:6:adisInit	16	static
+../Core/Src/adis.c:75:15:adisRead	24	static
+../Core/Src/adis.c:102:6:adisTriggerDMA	8	static
+../Core/Src/adis.c:111:9:adisReady	0	static
+../Core/Src/adis.c:117:6:HAL_SPI_TxRxCpltCallback	8	static

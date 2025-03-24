@@ -1,0 +1,4 @@
+../Core/Src/lsm.c:26:6:lsmInit	40	static
+../Core/Src/lsm.c:35:14:lsmRead	48	static
+../Core/Src/lsm.c:49:6:lsmTriggerDMA	16	static
+../Core/Src/lsm.c:57:6:lsmReleaseSemaphore	0	static

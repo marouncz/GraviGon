@@ -1,0 +1,4 @@
+../Core/Src/lsm.c:26:6:lsmInit	1
+../Core/Src/lsm.c:35:14:lsmRead	1
+../Core/Src/lsm.c:49:6:lsmTriggerDMA	1
+../Core/Src/lsm.c:57:6:lsmReleaseSemaphore	1
