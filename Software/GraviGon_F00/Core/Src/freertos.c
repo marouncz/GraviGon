@@ -45,6 +45,7 @@
 #include "tim.h"
 #include "usbd_core.h"
 #include "usbd_msc.h"
+#include <math.h>
 
 
 /* USER CODE END Includes */
@@ -66,7 +67,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-guiInfoStruc guiInfo = {0};
+volatile guiInfoStruc guiInfo = {0};
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
@@ -710,6 +711,28 @@ void StartLoggerTask(void *argument)
 }
 
 /* USER CODE BEGIN Header_StartMpuTask */
+#define FREEFALL_THRESHOLD 1.5  // m/s² (adjust based on noise)
+#define FREEFALL_TIME_MS   100  // Minimum time in freefall (adjustable)
+
+uint32_t last_fall_time = 0;   // Timestamp of last detected freefall
+
+// Function to detect freefall
+uint8_t detect_freefall(float ax, float ay, float az, uint32_t current_time_ms) {
+    float acceleration_magnitude = sqrtf(ax * ax + ay * ay + az * az);
+
+    if (acceleration_magnitude < FREEFALL_THRESHOLD) {
+        if (last_fall_time == 0) {
+            last_fall_time = current_time_ms;
+        }
+        if (current_time_ms - last_fall_time >= FREEFALL_TIME_MS) {
+            return 1;  // Freefall detected
+        }
+    } else {
+        last_fall_time = 0;  // Reset timer if no freefall
+    }
+
+    return 0;  // No freefall detected
+}
 /**
 * @brief Function implementing the mpuTask thread.
 * @param argument: Not used
@@ -728,7 +751,14 @@ void StartMpuTask(void *argument)
   for(;;)
   {
 	  mpuLog = mpuRead();
-	  osMessageQueuePut(mpuQHandle,  &mpuLog, 1, osWaitForever);
+	  if(detect_freefall(mpuLog.accelX, mpuLog.accelY, mpuLog.accelZ, HAL_GetTick()))
+	  {
+		  TIM1->CCR3 = 250;
+	  }
+
+
+
+	  //osMessageQueuePut(mpuQHandle,  &mpuLog, 1, osWaitForever);
 	  guiInfo.mpu = mpuLog;
 
   }
