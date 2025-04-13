@@ -130,7 +130,7 @@ const osThreadAttr_t lsmTask_attributes = {
 osThreadId_t loggerTaskHandle;
 const osThreadAttr_t loggerTask_attributes = {
   .name = "loggerTask",
-  .stack_size = 512 * 4,
+  .stack_size = 1024 * 4,
   .priority = (osPriority_t) osPriorityNormal2,
 };
 /* Definitions for mpuTask */
@@ -171,6 +171,11 @@ const osMessageQueueAttr_t mpuQ_attributes = {
 osMessageQueueId_t gnssQHandle;
 const osMessageQueueAttr_t gnssQ_attributes = {
   .name = "gnssQ"
+};
+/* Definitions for bmpQ */
+osMessageQueueId_t bmpQHandle;
+const osMessageQueueAttr_t bmpQ_attributes = {
+  .name = "bmpQ"
 };
 /* Definitions for i2c3Mutex */
 osMutexId_t i2c3MutexHandle;
@@ -255,6 +260,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of gnssQ */
   gnssQHandle = osMessageQueueNew (16, sizeof(gnssLoggedDataStruc), &gnssQ_attributes);
+
+  /* creation of bmpQ */
+  bmpQHandle = osMessageQueueNew (4, sizeof(bmpDataStruc), &bmpQ_attributes);
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
@@ -816,15 +824,15 @@ void StartMpuTask(void *argument)
 		}
 
 
-		//append GNSS data if available
-		if (osMessageQueueGetCount(gnssQHandle) > 0)
+		//append BMP data if available
+		if (osMessageQueueGetCount(bmpQHandle) > 0)
 		{
-			osMessageQueueGet(gnssQHandle, &loggerData.gnssLoggedData, NULL,
+			osMessageQueueGet(bmpQHandle, &loggerData.bmpData, NULL,
 			osWaitForever);
 		}
 		else
 		{
-			memset(&loggerData.gnssLoggedData, 0, sizeof(loggerData.gnssLoggedData));
+			memset(&loggerData.bmpData, 0, sizeof(loggerData.bmpData));
 
 		}
 
@@ -841,6 +849,7 @@ float pressure, temperature, humidity;
 
 uint16_t size;
 uint8_t Data[256];
+
 /**
 * @brief Function implementing the bmpTask thread.
 * @param argument: Not used
@@ -849,11 +858,13 @@ uint8_t Data[256];
 /* USER CODE END Header_StartBmpTask */
 void StartBmpTask(void *argument)
 {
-	/* USER CODE BEGIN StartBmpTask */
+  /* USER CODE BEGIN StartBmpTask */
 
 	bmp280_init_default_params(&bmp280.params);
 	bmp280.addr = BMP280_I2C_ADDRESS_0;
 	bmp280.i2c = &hi2c3;
+
+	bmpDataStruc bmpLog;
 
 	osMutexAcquire(i2c3MutexHandle, 10000);
 	while (!bmp280_init(&bmp280, &bmp280.params))
@@ -873,8 +884,12 @@ void StartBmpTask(void *argument)
 			//reading failed
 		}
 		osMutexRelease(i2c3MutexHandle);
+		bmpLog.pressure = pressure;
+		bmpLog.temperature = temperature;
+		osMessageQueuePut(bmpQHandle,  &bmpLog, 1, osWaitForever);
+
 	}
-	/* USER CODE END StartBmpTask */
+  /* USER CODE END StartBmpTask */
 }
 
 /* Private application code --------------------------------------------------*/

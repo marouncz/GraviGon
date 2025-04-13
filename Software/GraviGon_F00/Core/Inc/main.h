@@ -156,6 +156,7 @@ typedef struct
 {
 
 	float pressure;
+	float temperature;
 
 }bmpDataStruc;
 
@@ -206,10 +207,11 @@ typedef struct
 
 typedef struct
 {
-	adisDataStruc adisData;
+
 	lsmDataStruc lsmData;
 	mpuDataStruc mpuData;
-	gnssLoggedDataStruc gnssLoggedData;
+	bmpDataStruc bmpData;
+
 
 
 

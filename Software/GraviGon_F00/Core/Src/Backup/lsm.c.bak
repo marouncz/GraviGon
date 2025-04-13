@@ -34,8 +34,9 @@ void lsmInit(void)
 #define MAG_SCALE 0.15
 lsmDataStruc lsmRead(void)
 {
-	osSemaphoreAcquire(lsmTransmitCpltHandle, 2000);
+	//osSemaphoreAcquire(lsmTransmitCpltHandle, 2000);
 	//in microTesla
+	HAL_I2C_Mem_Read(&lsmI2C, LSM_MAG_ADDRESS, 0xE7, 1, &lsmRxData, 7,100);
 	lsmData.magX = ((int16_t) ((lsmRxData[2] << 8) | lsmRxData[1]))
 					* MAG_SCALE;
 	lsmData.magY = ((int16_t) ((lsmRxData[4] << 8) | lsmRxData[3]))
@@ -50,6 +51,7 @@ void lsmTriggerDMA(void)
 {
 	HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, 0);
 	HAL_I2C_Mem_Read_DMA(&lsmI2C, LSM_MAG_ADDRESS, 0xE7, 1, &lsmRxData, 7);
+	//osSemaphoreRelease(lsmTransmitCpltHandle);
 
 
 }
