@@ -718,7 +718,7 @@ void StartLoggerTask(void *argument)
 				}
 				else
 				{
-
+					HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, 1);
 				}
 
 			}
@@ -732,6 +732,16 @@ void StartLoggerTask(void *argument)
 			memcpy(buffer, &loggerStoreFS, sizeof(loggerStoreFS));
 			f_write(&SDFile, buffer, sizeof(loggerStoreFS),
 										(void*) &byteswritten);
+
+			static uint32_t counter = 0;
+
+			if (counter % 20 == 0)
+			{
+				f_sync(&SDFile);
+			}
+
+			counter++;
+
 		}
 		else if (!loggerState && prevLoggerState)
 		{
@@ -740,6 +750,7 @@ void StartLoggerTask(void *argument)
 			f_mount(&SDFatFS, (TCHAR const*) NULL, 0);
 			USBD_LL_Init(&hUsbDeviceFS);
 			MX_USB_DEVICE_Init();
+			HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, 0);
 		}
 		else
 		{
