@@ -23,10 +23,19 @@ hold on;
 legend("gyroX", "gyroY", "gyroZ")
 
 figure;
+plot(data.lsmMagX, 'rx-', 'LineWidth', 1)
+hold on;
+plot(data.lsmMagY, 'bx-', 'LineWidth', 1)
+hold on;
+plot(data.lsmMagZ, 'gx-', 'LineWidth', 1)
+hold on;
+legend("magX", "magY", "magZ")
+
+figure;
 yyaxis left
-plot(data.pressure, 'rx-', 'LineWidth', 2)
+plot(data.pressure, 'rx-', 'LineWidth', 1)
 hold on;
 yyaxis right
-plot(data.temperature, 'bx-', 'LineWidth', 2)
+plot(data.temperature, 'bx-', 'LineWidth', 1)
 hold on;
 legend("presure", "temperature")
