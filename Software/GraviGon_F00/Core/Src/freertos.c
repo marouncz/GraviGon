@@ -46,6 +46,7 @@
 #include "usbd_core.h"
 #include "usbd_msc.h"
 #include <math.h>
+#include "bmp.h"
 
 
 /* USER CODE END Includes */
@@ -139,6 +140,13 @@ const osThreadAttr_t mpuTask_attributes = {
   .stack_size = 512 * 4,
   .priority = (osPriority_t) osPriorityRealtime1,
 };
+/* Definitions for bmpTask */
+osThreadId_t bmpTaskHandle;
+const osThreadAttr_t bmpTask_attributes = {
+  .name = "bmpTask",
+  .stack_size = 256 * 4,
+  .priority = (osPriority_t) osPriorityHigh7,
+};
 /* Definitions for adisQ */
 osMessageQueueId_t adisQHandle;
 const osMessageQueueAttr_t adisQ_attributes = {
@@ -164,6 +172,11 @@ osMessageQueueId_t gnssQHandle;
 const osMessageQueueAttr_t gnssQ_attributes = {
   .name = "gnssQ"
 };
+/* Definitions for i2c3Mutex */
+osMutexId_t i2c3MutexHandle;
+const osMutexAttr_t i2c3Mutex_attributes = {
+  .name = "i2c3Mutex"
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -180,6 +193,7 @@ void StartAdisTask(void *argument);
 void StartLsmTask(void *argument);
 void StartLoggerTask(void *argument);
 void StartMpuTask(void *argument);
+void StartBmpTask(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -210,6 +224,9 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
 
   /* USER CODE END Init */
+  /* Create the mutex(es) */
+  /* creation of i2c3Mutex */
+  i2c3MutexHandle = osMutexNew(&i2c3Mutex_attributes);
 
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
@@ -275,6 +292,9 @@ void MX_FREERTOS_Init(void) {
   /* creation of mpuTask */
   mpuTaskHandle = osThreadNew(StartMpuTask, NULL, &mpuTask_attributes);
 
+  /* creation of bmpTask */
+  bmpTaskHandle = osThreadNew(StartBmpTask, NULL, &bmpTask_attributes);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
@@ -286,6 +306,7 @@ void MX_FREERTOS_Init(void) {
 }
 
 /* USER CODE BEGIN Header_StartDefaultTask */
+uint8_t loggerStateGlobal = 0;
 /**
   * @brief  Function implementing the defaultTask thread.
   * @param  argument: Not used
@@ -343,6 +364,16 @@ void StartKeepaliveTask(void *argument)
 		if (HAL_GPIO_ReadPin(BUTTON2_GPIO_Port, BUTTON2_Pin) == 0)
 		{
 			TIM1->CCR3 = 1250;
+			osDelay(100);
+		}
+		if (HAL_GPIO_ReadPin(BUTTON3_GPIO_Port, BUTTON3_Pin) == 0)
+		{
+			loggerStateGlobal = 1;
+			osDelay(100);
+		}
+		if (HAL_GPIO_ReadPin(BUTTON4_GPIO_Port, BUTTON4_Pin) == 0)
+		{
+			loggerStateGlobal = 0;
 			osDelay(100);
 		}
 		HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
@@ -601,14 +632,18 @@ void StartLsmTask(void *argument)
 	lsmDataStruc lsmLog;
 
 	osDelay(1000);
+	osMutexAcquire(i2c3MutexHandle, 10000);
 	lsmInit();
-	osDelay(100);
+	osMutexRelease(i2c3MutexHandle);
+	osDelay(1000);
 
   /* Infinite loop */
   for(;;)
   {
-
+	  osDelay(10);
+	  osMutexAcquire(i2c3MutexHandle, 10000);
 	  lsmLog = lsmRead();
+	  osMutexRelease(i2c3MutexHandle);
 	  osMessageQueuePut(lsmQHandle,  &lsmLog, 1, osWaitForever);
 	  guiInfo.lsm = lsmLog;
 
@@ -632,11 +667,12 @@ void StartLoggerTask(void *argument)
   /* USER CODE BEGIN StartLoggerTask */
 	loggerStruc loggerStore[10];
 	loggerStruc loggerStoreFS;
+	uint8_t loggerState = 0;
 
 	FRESULT res; /* FatFs function common result code */
 	uint32_t byteswritten, bytesread; /* File write/read counts */
 
-	uint8_t loggerState = 0;
+
 	uint8_t prevLoggerState = 0;
 	uint8_t buffer[sizeof(loggerStoreFS)];
 
@@ -648,7 +684,8 @@ void StartLoggerTask(void *argument)
   /* Infinite loop */
   for(;;)
   {
-		loggerState = isLoggerOn();
+		//loggerState = isLoggerOn();
+	  loggerState = loggerStateGlobal;
 
 		if (loggerState && !prevLoggerState)
 		{
@@ -747,6 +784,7 @@ void StartMpuTask(void *argument)
 	osDelay(100);
 
 	mpuDataStruc mpuLog;
+	loggerStruc loggerData;
   /* Infinite loop */
   for(;;)
   {
@@ -759,10 +797,84 @@ void StartMpuTask(void *argument)
 
 
 	  //osMessageQueuePut(mpuQHandle,  &mpuLog, 1, osWaitForever);
-	  guiInfo.mpu = mpuLog;
+	    guiInfo.mpu = mpuLog;
+
+
+		loggerData.mpuData = mpuLog;
+
+
+		//append LSM data if available
+		if (osMessageQueueGetCount(lsmQHandle) > 0)
+		{
+			osMessageQueueGet(lsmQHandle, &loggerData.lsmData, NULL,
+			osWaitForever);
+		}
+		else
+		{
+			memset(&loggerData.lsmData, 0, sizeof(loggerData.lsmData));
+
+		}
+
+
+		//append GNSS data if available
+		if (osMessageQueueGetCount(gnssQHandle) > 0)
+		{
+			osMessageQueueGet(gnssQHandle, &loggerData.gnssLoggedData, NULL,
+			osWaitForever);
+		}
+		else
+		{
+			memset(&loggerData.gnssLoggedData, 0, sizeof(loggerData.gnssLoggedData));
+
+		}
+
+		osMessageQueuePut(loggerQHandle, &loggerData, 1, osWaitForever);
 
   }
   /* USER CODE END StartMpuTask */
+}
+
+/* USER CODE BEGIN Header_StartBmpTask */
+BMP280_HandleTypedef bmp280;
+
+float pressure, temperature, humidity;
+
+uint16_t size;
+uint8_t Data[256];
+/**
+* @brief Function implementing the bmpTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_StartBmpTask */
+void StartBmpTask(void *argument)
+{
+	/* USER CODE BEGIN StartBmpTask */
+
+	bmp280_init_default_params(&bmp280.params);
+	bmp280.addr = BMP280_I2C_ADDRESS_0;
+	bmp280.i2c = &hi2c3;
+
+	osMutexAcquire(i2c3MutexHandle, 10000);
+	while (!bmp280_init(&bmp280, &bmp280.params))
+	{
+		//init not successfull
+	}
+	osMutexRelease(i2c3MutexHandle);
+
+
+	/* Infinite loop */
+	for (;;)
+	{
+		osDelay(100);
+		osMutexAcquire(i2c3MutexHandle, 10000);
+		while (!bmp280_read_float(&bmp280, &temperature, &pressure, &humidity))
+		{
+			//reading failed
+		}
+		osMutexRelease(i2c3MutexHandle);
+	}
+	/* USER CODE END StartBmpTask */
 }
 
 /* Private application code --------------------------------------------------*/
@@ -772,7 +884,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 	if (GPIO_Pin == LSM_INTMAG_Pin)
 	{
-		lsmTriggerDMA();
+		//osMutexAcquire(i2c3MutexHandle, 10000);
+		//lsmTriggerDMA();
+
 
 	}
 	if (GPIO_Pin == MPU_INT_Pin)
@@ -790,7 +904,8 @@ void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
 	if (hi2c == &lsmI2C)
 	{
 		HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, 1);
-		lsmReleaseSemaphore();
+		//lsmReleaseSemaphore();
+		//osMutexRelease(i2c3MutexHandle);
 
 	}
 	if (hi2c == &mpuI2C)

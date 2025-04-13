@@ -155,6 +155,13 @@ typedef struct
 typedef struct
 {
 
+	float pressure;
+
+}bmpDataStruc;
+
+typedef struct
+{
+
 	//struct size
 	float accelX;
 	float accelY;
