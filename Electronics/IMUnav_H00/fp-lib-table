@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "IMUnav")(type "KiCad")(uri "${KIPRJMOD}/../IMUnav-library/IMUnav.pretty")(options "")(descr ""))
+)

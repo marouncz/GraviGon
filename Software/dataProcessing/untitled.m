@@ -2,7 +2,7 @@ clc
 clear all 
 close all
 
-data = readtable("output.csv");
+data = readtable("freefallHoledna.csv");
 
 figure;
 plot(data.mpuAccelX)

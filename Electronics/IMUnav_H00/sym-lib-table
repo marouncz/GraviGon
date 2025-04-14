@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "IMUnav")(type "KiCad")(uri "${KIPRJMOD}/../IMUnav-library/IMUnav.kicad_sym")(options "")(descr ""))
+)
