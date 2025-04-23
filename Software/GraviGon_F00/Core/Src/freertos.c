@@ -360,34 +360,86 @@ void StartKeepaliveTask(void *argument)
 	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);
 
 
-	
-  /* Infinite loop */
-  for(;;)
-  {
-		if (HAL_GPIO_ReadPin(BUTTON1_GPIO_Port, BUTTON1_Pin) == 0)
-		{
-			TIM1->CCR3 = 250;
-			osDelay(100);
-		}
-		if (HAL_GPIO_ReadPin(BUTTON2_GPIO_Port, BUTTON2_Pin) == 0)
-		{
-			TIM1->CCR3 = 1250;
-			osDelay(100);
-		}
-		if (HAL_GPIO_ReadPin(BUTTON3_GPIO_Port, BUTTON3_Pin) == 0)
-		{
-			loggerStateGlobal = 1;
-			osDelay(100);
-		}
-		if (HAL_GPIO_ReadPin(BUTTON4_GPIO_Port, BUTTON4_Pin) == 0)
-		{
-			loggerStateGlobal = 0;
-			osDelay(100);
-		}
-		HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
-		osDelay(100);
+	// Initialization (any necessary initializations)
+	    static uint8_t toggle = 0;
+	    static uint32_t button1_last_press_time = 0;  // Store the last press time for Button1
+	    static uint32_t button1_debounce_time = 100;  // Debounce time in ms
+	    static uint8_t button1_state = GPIO_PIN_SET;  // Last state of BUTTON1
+	    static uint8_t button3_state = GPIO_PIN_SET;  // Last state of BUTTON3
+	    static uint8_t button4_state = GPIO_PIN_SET;  // Last state of BUTTON4
 
-  }
+	    static uint32_t led_last_toggle_time = 0;  // For LED blinking
+	    static uint32_t led_blink_interval = 10;  // LED blink interval in ms (100Hz)
+
+	    // This task runs at 10Hz (every 100ms)
+	    for (;;)
+	    {
+	        uint32_t currentTime = HAL_GetTick();
+
+	        // Handle LED Blinking (toggle every 10ms for 100Hz blinking)
+	        if ((currentTime - led_last_toggle_time) >= led_blink_interval)
+	        {
+	            HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);  // Toggle LED state
+	            led_last_toggle_time = currentTime;  // Update last toggle time
+	        }
+
+	        // Handle Button1 for servo toggle (debounce)
+	        uint8_t button1_current_state = HAL_GPIO_ReadPin(BUTTON1_GPIO_Port, BUTTON1_Pin);
+
+	        if (button1_current_state == GPIO_PIN_SET && button1_state == GPIO_PIN_RESET)
+	        {
+	            // Debounce check: only act if enough time has passed since the last press
+	            if ((currentTime - button1_last_press_time) >= button1_debounce_time)
+	            {
+	                // Toggle the servo position
+	                if (toggle == 0)
+	                {
+	                    TIM1->CCR3 = 250;  // First position
+	                    toggle = 1;
+	                }
+	                else
+	                {
+	                    TIM1->CCR3 = 1250;  // Second position
+	                    toggle = 0;
+	                }
+
+	                // Update the last press time
+	                button1_last_press_time = currentTime;
+	            }
+	        }
+
+	        // Update the last button state for the next loop iteration
+	        button1_state = button1_current_state;
+
+	        // Check Button3 and Button4 for loggerStateGlobal changes
+	        uint8_t button3_current_state = HAL_GPIO_ReadPin(BUTTON3_GPIO_Port, BUTTON3_Pin);
+	        uint8_t button4_current_state = HAL_GPIO_ReadPin(BUTTON4_GPIO_Port, BUTTON4_Pin);
+
+	        // Handle Button3 press (debounced)
+	        if (button3_current_state == GPIO_PIN_RESET && button3_state == GPIO_PIN_SET)
+	        {
+	            loggerStateGlobal = 1;
+	            button3_state = GPIO_PIN_RESET;  // Update state
+	        }
+	        else if (button3_current_state == GPIO_PIN_SET && button3_state == GPIO_PIN_RESET)
+	        {
+	            button3_state = GPIO_PIN_SET;  // Update state
+	        }
+
+	        // Handle Button4 press (debounced)
+	        if (button4_current_state == GPIO_PIN_RESET && button4_state == GPIO_PIN_SET)
+	        {
+	            loggerStateGlobal = 0;
+	            button4_state = GPIO_PIN_RESET;  // Update state
+	        }
+	        else if (button4_current_state == GPIO_PIN_SET && button4_state == GPIO_PIN_RESET)
+	        {
+	            button4_state = GPIO_PIN_SET;  // Update state
+	        }
+
+	        osDelay(100);
+	    }
+
   /* USER CODE END StartKeepaliveTask */
 }
 
@@ -767,7 +819,7 @@ void StartLoggerTask(void *argument)
 }
 
 /* USER CODE BEGIN Header_StartMpuTask */
-#define FREEFALL_THRESHOLD 1.5  // m/s² (adjust based on noise)
+#define FREEFALL_THRESHOLD 5.0  // m/s² (adjust based on noise)
 #define FREEFALL_TIME_MS   100  // Minimum time in freefall (adjustable)
 
 uint32_t last_fall_time = 0;   // Timestamp of last detected freefall
@@ -797,59 +849,89 @@ uint8_t detect_freefall(float ax, float ay, float az, uint32_t current_time_ms) 
 /* USER CODE END Header_StartMpuTask */
 void StartMpuTask(void *argument)
 {
-  /* USER CODE BEGIN StartMpuTask */
-	osDelay(100);
-	mpuInit();
-	osDelay(100);
+	// Initialization
+	    osDelay(100);
+	    mpuInit();
+	    osDelay(100);
 
-	mpuDataStruc mpuLog;
-	loggerStruc loggerData;
-  /* Infinite loop */
-  for(;;)
-  {
-	  mpuLog = mpuRead();
-	  if(detect_freefall(mpuLog.accelX, mpuLog.accelY, mpuLog.accelZ, HAL_GetTick()))
-	  {
-		  TIM1->CCR3 = 250;
-	  }
+	    mpuDataStruc mpuLog;
+	    loggerStruc loggerData;
 
+	    static uint8_t firstPress = 0;
+	    static uint32_t timeAtFirstPress = 0;
+	    static uint32_t timeAtRelease = 0;
+	    static uint32_t failsafeDelay = 1000;  // 1000ms after button release to trigger failsafe
 
+	    // Infinite loop
+	    for(;;)
+	    {
+	        uint32_t currentTime = HAL_GetTick();
+	        mpuLog = mpuRead();
 
-	  //osMessageQueuePut(mpuQHandle,  &mpuLog, 1, osWaitForever);
-	    guiInfo.mpu = mpuLog;
+	        // Check if freefall is detected (move servo to position 250 if freefall occurs)
+	        if(detect_freefall(mpuLog.accelX, mpuLog.accelY, mpuLog.accelZ, currentTime))
+	        {
+	            TIM1->CCR3 = 250;  // Move servo to the first position
+	        }
 
+	        // Button2 press detection (start the timer)
+	        if(HAL_GPIO_ReadPin(BUTTON2_GPIO_Port, BUTTON2_Pin) == GPIO_PIN_RESET) // Button pressed
+	        {
+	            if (!firstPress) // First press, start the timer
+	            {
+	                firstPress = 1;
+	                timeAtFirstPress = currentTime;  // Store the press time
+	            }
+	        }
 
-		loggerData.mpuData = mpuLog;
+	        // Button2 release detection after first press
+	        if(HAL_GPIO_ReadPin(BUTTON2_GPIO_Port, BUTTON2_Pin) == GPIO_PIN_SET && firstPress) // Button released
+	        {
+	            // Store the release time
+	            timeAtRelease = currentTime;
 
+	            // After the button is released, we start a 100ms wait
+	            firstPress = 0;  // Reset first press flag
+	        }
 
-		//append LSM data if available
-		if (osMessageQueueGetCount(lsmQHandle) > 0)
-		{
-			osMessageQueueGet(lsmQHandle, &loggerData.lsmData, NULL,
-			osWaitForever);
-		}
-		else
-		{
-			memset(&loggerData.lsmData, 0, sizeof(loggerData.lsmData));
+	        // Check if 100ms have passed after button release to trigger the failsafe action
+	        if (timeAtRelease != 0 && (currentTime - timeAtRelease) >= failsafeDelay)
+	        {
+	            // After 100ms, release the parachute (move servo to position 250)
+	            TIM1->CCR3 = 250;
 
-		}
+	            // Reset release time to avoid continuous failsafe action
+	            timeAtRelease = 0;
+	        }
 
+	        // Log the MPU data to the queue
+	        guiInfo.mpu = mpuLog;
+	        loggerData.mpuData = mpuLog;
 
-		//append BMP data if available
-		if (osMessageQueueGetCount(bmpQHandle) > 0)
-		{
-			osMessageQueueGet(bmpQHandle, &loggerData.bmpData, NULL,
-			osWaitForever);
-		}
-		else
-		{
-			memset(&loggerData.bmpData, 0, sizeof(loggerData.bmpData));
+	        // Append LSM data if available
+	        if (osMessageQueueGetCount(lsmQHandle) > 0)
+	        {
+	            osMessageQueueGet(lsmQHandle, &loggerData.lsmData, NULL, osWaitForever);
+	        }
+	        else
+	        {
+	            memset(&loggerData.lsmData, 0, sizeof(loggerData.lsmData));
+	        }
 
-		}
+	        // Append BMP data if available
+	        if (osMessageQueueGetCount(bmpQHandle) > 0)
+	        {
+	            osMessageQueueGet(bmpQHandle, &loggerData.bmpData, NULL, osWaitForever);
+	        }
+	        else
+	        {
+	            memset(&loggerData.bmpData, 0, sizeof(loggerData.bmpData));
+	        }
 
-		osMessageQueuePut(loggerQHandle, &loggerData, 1, osWaitForever);
+	        // Put the logger data into the queue
+	        osMessageQueuePut(loggerQHandle, &loggerData, 1, osWaitForever);
 
-  }
+	    }
   /* USER CODE END StartMpuTask */
 }
 
