@@ -1,0 +1,158 @@
+<mxfile host="Electron" modified="2023-12-26T22:27:02.133Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/22.1.2 Chrome/114.0.5735.289 Electron/25.9.4 Safari/537.36" etag="BsR7rtRswS18ui63CUo2" version="22.1.2" type="device">
+  <diagram name="Stránka-1" id="N026slv5AEJC5KF3dV6V">
+    <mxGraphModel dx="1430" dy="825" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="1" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-39" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="160" y="80" width="570" height="380" as="geometry" />
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-1" value="" style="verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;shape=mxgraph.electrical.abstract.sum;" vertex="1" parent="1">
+          <mxGeometry x="459" y="280" width="20" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="HNQzkRMr5-khPHUgaeeY-2" target="HNQzkRMr5-khPHUgaeeY-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-2" value="&lt;font style=&quot;font-size: 14px;&quot; face=&quot;CMU Serif Roman&quot;&gt;Tříosý &lt;br&gt;&lt;b&gt;akcelerometr&lt;/b&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="50" y="260" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="HNQzkRMr5-khPHUgaeeY-4" target="HNQzkRMr5-khPHUgaeeY-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-4" value="&lt;font style=&quot;font-size: 14px;&quot; face=&quot;CMU Serif Roman&quot;&gt;Tříosý&lt;br&gt;&lt;b&gt;gyroskop&lt;/b&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="50" y="390" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-6" value="&lt;font style=&quot;font-size: 14px;&quot; face=&quot;CMU Serif Roman&quot;&gt;&lt;b&gt;Kompenzace chyb&lt;/b&gt;&lt;br&gt;&amp;nbsp;akcelerometru&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="170" y="260" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="HNQzkRMr5-khPHUgaeeY-6" target="HNQzkRMr5-khPHUgaeeY-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-15" value="$$\vec{f^b}$$" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="HNQzkRMr5-khPHUgaeeY-13">
+          <mxGeometry x="0.0508" relative="1" as="geometry">
+            <mxPoint x="-1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="HNQzkRMr5-khPHUgaeeY-7" target="HNQzkRMr5-khPHUgaeeY-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-18" value="$$\vec{\omega^b_{ib}}$$" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="HNQzkRMr5-khPHUgaeeY-14">
+          <mxGeometry x="-0.184" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-7" value="&lt;font style=&quot;font-size: 14px;&quot; face=&quot;CMU Serif Roman&quot;&gt;&lt;b&gt;Kompenzace chyb&lt;/b&gt;&lt;br&gt;&amp;nbsp;gyroskopu&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="170" y="390" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="HNQzkRMr5-khPHUgaeeY-10" target="HNQzkRMr5-khPHUgaeeY-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-19" value="$$\mathbf{C}_{b}^{i}$$" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="HNQzkRMr5-khPHUgaeeY-12">
+          <mxGeometry x="-0.02" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-10" value="&lt;font face=&quot;CMU Serif Roman&quot;&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;Výpočet &lt;b&gt;náklonu&lt;/b&gt;&lt;/span&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="309" y="390" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-11" value="&lt;font face=&quot;CMU Serif Roman&quot;&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;&lt;b&gt;Rotace &lt;/b&gt;dat akcelerometru&lt;/span&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="309" y="260" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-20" value="+" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="HNQzkRMr5-khPHUgaeeY-11" target="HNQzkRMr5-khPHUgaeeY-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-21" value="$$\vec{f^i}$$" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="HNQzkRMr5-khPHUgaeeY-20">
+          <mxGeometry x="-0.0667" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-43" value="&lt;font face=&quot;CMU Serif Roman&quot;&gt;Pohybové rovnice&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="540" y="250" width="120" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="HNQzkRMr5-khPHUgaeeY-22" target="HNQzkRMr5-khPHUgaeeY-40">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="550" y="290" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-22" value="" style="verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;shape=mxgraph.electrical.abstract.sum;" vertex="1" parent="1">
+          <mxGeometry x="499" y="280" width="20" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="HNQzkRMr5-khPHUgaeeY-1" target="HNQzkRMr5-khPHUgaeeY-22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="740" y="290" as="targetPoint" />
+            <mxPoint x="670" y="290" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-31" value="$$\vec{r^i}$$" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="HNQzkRMr5-khPHUgaeeY-28">
+          <mxGeometry x="0.4186" y="2" relative="1" as="geometry">
+            <mxPoint x="-9" y="2" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="740" y="330" as="targetPoint" />
+            <mxPoint x="600" y="290" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="600" y="330" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-30" value="$$\vec{v^i}$$" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="HNQzkRMr5-khPHUgaeeY-29">
+          <mxGeometry x="0.485" relative="1" as="geometry">
+            <mxPoint x="16" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" target="HNQzkRMr5-khPHUgaeeY-26">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="670" y="290" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="680" y="290" />
+              <mxPoint x="680" y="200" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-33" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="HNQzkRMr5-khPHUgaeeY-41" target="HNQzkRMr5-khPHUgaeeY-27">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="670" y="290" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="680" y="290" />
+              <mxPoint x="680" y="120" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-26" value="&lt;font face=&quot;CMU Serif Roman&quot;&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;Kompenzace rotace Země&lt;/span&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="550" y="170" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-27" value="&lt;font face=&quot;CMU Serif Roman&quot;&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;Kompenzace gravitace&lt;/span&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="550" y="90" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="HNQzkRMr5-khPHUgaeeY-27" target="HNQzkRMr5-khPHUgaeeY-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-36" value="$$\vec{g^i}$$" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="HNQzkRMr5-khPHUgaeeY-34">
+          <mxGeometry x="0.2579" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-35" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="HNQzkRMr5-khPHUgaeeY-26" target="HNQzkRMr5-khPHUgaeeY-22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-38" value="&lt;font face=&quot;CMU Serif Roman&quot; style=&quot;font-size: 16px;&quot;&gt;Určení polohy&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;rotation=-90;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="695" y="300" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-40" value="" style="verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;shape=mxgraph.electrical.abstract.integrator;" vertex="1" parent="1">
+          <mxGeometry x="560" y="280" width="20" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-41" value="" style="verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;shape=mxgraph.electrical.abstract.integrator;" vertex="1" parent="1">
+          <mxGeometry x="620" y="280" width="20" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="HNQzkRMr5-khPHUgaeeY-42" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="HNQzkRMr5-khPHUgaeeY-40" target="HNQzkRMr5-khPHUgaeeY-41">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
